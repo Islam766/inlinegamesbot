@@ -37,7 +37,7 @@ class Checkers extends Game
      *
      * @var string
      */
-    protected static $title = 'Checkers';
+    protected static $title = 'Шашки';
 
     /**
      * Game name
@@ -51,7 +51,7 @@ class Checkers extends Game
      *
      * @var string
      */
-    protected static $description = 'Checkers is game in which the goal is to capture the other player\'s checkers or make them impossible to move.';
+    protected static $description = 'Шашки - игра, цель которой - поймать другого игрока.\'s шашки или сделать невозможным их перемещение.';
 
     /**
      * Game thumbnail image
@@ -108,13 +108,13 @@ class Checkers extends Game
     protected function forfeitAction()
     {
         if ($this->getCurrentUserId() !== $this->getUserId('host') && $this->getCurrentUserId() !== $this->getUserId('guest')) {
-            return $this->answerCallbackQuery(__("You're not in this game!"), true);
+            return $this->answerCallbackQuery(__("Ты не в этой игре!"), true);
         }
 
         $data = &$this->data['game_data'];
 
         if ((isset($data['current_turn']) && $data['current_turn'] == 'E') || $data['board'] === null) {
-            return $this->answerCallbackQuery(__("This game has ended!", true));
+            return $this->answerCallbackQuery(__("Эта игра окончена!", true));
         }
 
         $this->defineSymbols();
@@ -143,7 +143,7 @@ class Checkers extends Game
             $data['vote']['host']['surrender'] = true;
 
             if ($this->saveData($this->data)) {
-                return $this->answerCallbackQuery(__("Press the button again to surrender!"), true);
+                return $this->answerCallbackQuery(__("Нажмите кнопку еще раз, чтобы сдаться!"), true);
             }
         }
 
@@ -168,11 +168,11 @@ class Checkers extends Game
             $data['vote']['guest']['surrender'] = true;
 
             if ($this->saveData($this->data)) {
-                return $this->answerCallbackQuery(__("Press the button again to surrender!"), true);
+                return $this->answerCallbackQuery(__("Нажмите кнопку еще раз, чтобы сдаться!"), true);
             }
         }
 
-        Utilities::debugPrint('Someone else executed forfeit action');
+        Utilities::debugPrint('Кто-то другой выполнил штрафные санкции');
 
         return $this->answerCallbackQuery();
     }
@@ -264,7 +264,7 @@ class Checkers extends Game
                 $inline_keyboard[] = [
                     new InlineKeyboardButton(
                         [
-                            'text'          => __('Vote to draw'),
+                            'text'          => __('Голосовать за розыгрыш'),
                             'callback_data' => self::getCode() . ';draw',
                         ]
                     ),
@@ -403,7 +403,7 @@ class Checkers extends Game
             }
         }
 
-        return $this->answerCallbackQuery(__("You already voted!"), true);
+        return $this->answerCallbackQuery(__("Вы уже проголосовали!"), true);
     }
 
     /**
@@ -483,7 +483,7 @@ class Checkers extends Game
                         if ($data['current_selection_lock'] == false) {
                             return $this->answerCallbackQuery();
                         } else {
-                            return $this->answerCallbackQuery(__("You must make a jump when possible!"), true);
+                            return $this->answerCallbackQuery(__("Вы должны сделать прыжок, когда это возможно"), true);
                         }
                     } else {
                         Utilities::debugPrint('Listing possible moves');
@@ -506,7 +506,7 @@ class Checkers extends Game
 
                         if (in_array($args[0] . $args[1], $possibleMoves['valid_moves']) && $data['board'][$args[0]][$args[1]] == '') {
                             if ($forcedJump) {
-                                return $this->answerCallbackQuery(__("You must make a jump when possible!"), true);
+                                return $this->answerCallbackQuery(__("Вы должны сделать прыжок, когда это возможно!"), true);
                             }
 
                             $data['board'][$args[0]][$args[1]] = $data['board'][$data['current_selection'][0]][$data['current_selection'][1]];
@@ -554,7 +554,7 @@ class Checkers extends Game
                             }
                         } else {
                             if ($data['current_selection_lock'] == true) {
-                                return $this->answerCallbackQuery(__("You must make a jump when possible!"), true);
+                                return $this->answerCallbackQuery(__("Вы должны сделать прыжок, когда это возможно!"), true);
                             } elseif ($this->getCurrentUserId() === $this->getUserId($data['settings'][$data['current_turn']]) && strpos($data['board'][$args[0]][$args[1]], $data['current_turn']) !== false) {
                                 $data['current_selection'] = $args[0] . $args[1];
                             } else {
@@ -610,18 +610,18 @@ class Checkers extends Game
             $gameOutput .= Emoji::playButton() . ' ' . $this->getUserMention($data['settings'][$data['current_turn']]) . ' (' . $this->symbols[$data['current_turn']] . ')';
 
             if ($data['current_selection'] == '') {
-                $gameOutput .= "\n" . __("(Select the piece you want to move)");
+                $gameOutput .= "\n" . __("(Выберите фигуру, которую хотите переместить)");
             } else {
                 $gameOutput .= "\n" . __("(Selected: {COORDINATES})", ['{COORDINATES}' => ($data['current_selection'][0] + 1) . '-' . ($data['current_selection'][1] + 1)]);
 
                 if ($data['current_selection_lock'] == false) {
-                    $gameOutput .= "\n" . __("(Make your move or select different piece)");
+                    $gameOutput .= "\n" . __("(Сделайте свой ход или выберите другую фигуру)");
                 } else {
-                    $gameOutput .= "\n" . __("(Your move must continue)");
+                    $gameOutput .= "\n" . __("(Ваш ход должен продолжаться)");
                 }
             }
 
-            Utilities::debugPrint('Game is still in progress');
+            Utilities::debugPrint('Игра все еще продолжается');
         }
 
         if ($this->saveData($this->data)) {
