@@ -44,7 +44,7 @@ class Russianroulette extends Game
      *
      * @var string
      */
-    protected static $description = 'Russian roulette is a game of chance in which a player places a single round in a revolver, spins the cylinder, places the muzzle against their head, and pulls the trigger.';
+    protected static $description = 'Русская рулетка - это азартная игра, в которой игрок кладет один патрон в револьвер, вращает цилиндр, приставляет дуло к голове и нажимает на курок.';
 
     /**
      * Game thumbnail image
@@ -72,7 +72,7 @@ class Russianroulette extends Game
     protected function gameAction(): ServerResponse
     {
         if ($this->getCurrentUserId() !== $this->getUserId('host') && $this->getCurrentUserId() !== $this->getUserId('guest')) {
-            return $this->answerCallbackQuery(__("You're not in this game!"), true);
+            return $this->answerCallbackQuery(__("Ты не в этой игре!"), true);
         }
 
         $data = &$this->data['game_data'];
@@ -106,11 +106,11 @@ class Russianroulette extends Game
         }
 
         if (isset($data['current_turn']) && $data['current_turn'] == 'E') {
-            return $this->answerCallbackQuery(__("This game has ended!"), true);
+            return $this->answerCallbackQuery(__("Эта игра окончена!"), true);
         }
 
         if ($this->getCurrentUserId() !== $this->getUserId($data['settings'][$data['current_turn']]) && $command !== 'start') {
-            return $this->answerCallbackQuery(__("It's not your turn!"), true);
+            return $this->answerCallbackQuery(__("Это не твоя очередь!"), true);
         }
 
         $hit = '';
